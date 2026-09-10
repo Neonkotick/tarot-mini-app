@@ -1,16 +1,23 @@
-# Tarot Mini App
+# Tarot Mini App (Cloudflare Pages)
 
-Telegram Mini App — случайный расклад Таро с 3 бесплатными раскладами и оплатой через Telegram Stars.
+Telegram Mini App — случайный расклад Таро с оплатой через Telegram Stars.
 
-## Деплой на Vercel
+## Деплой на Cloudflare Pages
 
-1. Импортируй этот репозиторий в [Vercel](https://vercel.com).
-2. В Environment Variables добавь:
-   - `BOT_TOKEN` = токен твоего бота (из @BotFather)
-3. Deploy.
-4. В @BotFather → Bot Settings → Menu Button укажи URL проекта Vercel.
+1. Зайди на https://dash.cloudflare.com → Workers & Pages → Create → Pages → Connect to Git
+2. Выбери репозиторий `tarot-mini-app`
+3. Настройки сборки:
+   - Framework preset: None
+   - Build command: (оставь пустым)
+   - Build output directory: `/`
+4. После первого деплоя зайди в Settings → Environment variables
+5. Добавь:
+   - Variable name: `BOT_TOKEN`
+   - Value: твой токен бота
+   - Environment: Production
+6. Сделай Redeploy
 
-## Важно
+## Привязка к боту
 
-- Токен бота **никогда** не коммить в репозиторий.
-- Старый токен, который был отправлен в чат, нужно отозвать через /revoke в BotFather.
+В @BotFather → Bot Settings → Menu Button → укажи URL вида:
+`https://твой-проект.pages.dev`
