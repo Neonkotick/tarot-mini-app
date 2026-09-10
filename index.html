@@ -90,10 +90,12 @@
     .btn-draw .sub { display: block; margin-top: 6px; font-size: 11px; color: rgba(232,224,213,0.45); letter-spacing: 1px; }
     .spread { display: none; width: 100%; max-width: 440px; flex-direction: column; align-items: center; gap: 22px; }
     .spread.active { display: flex; }
-    .cards { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; perspective: 800px; }
+    .cards { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; perspective: 900px; }
+
+    /* Карты */
     .card-wrap {
-      width: 118px; height: 168px; position: relative; transform-style: preserve-3d;
-      transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
+      width: 118px; height: 178px; position: relative; transform-style: preserve-3d;
+      transition: transform 0.75s cubic-bezier(0.4, 0.2, 0.2, 1);
       opacity: 0; animation: cardAppear 0.5s ease forwards;
     }
     .card-wrap:nth-child(1) { animation-delay: 0.1s; }
@@ -106,45 +108,72 @@
     }
     .card-face {
       position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 12px 8px;
-      box-shadow: 0 0 0 1px rgba(0,0,0,0.4), 0 10px 28px rgba(0,0,0,0.55), 0 0 18px rgba(201,162,39,0.1);
+      display: flex; flex-direction: column; align-items: center;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.45), 0 12px 30px rgba(0,0,0,0.55), 0 0 20px rgba(201,162,39,0.12);
     }
+
+    /* Рубашка */
     .card-back {
-      background: radial-gradient(circle at 50% 50%, #2a1a35 0%, #120c18 70%),
-                  repeating-linear-gradient(45deg, transparent, transparent 6px, rgba(201,162,39,0.06) 6px, rgba(201,162,39,0.06) 7px);
+      background: radial-gradient(circle at 50% 45%, #2a1a35 0%, #120c18 70%),
+                  repeating-linear-gradient(45deg, transparent, transparent 6px, rgba(201,162,39,0.07) 6px, rgba(201,162,39,0.07) 7px);
       border: 1px solid rgba(201,162,39,0.4);
+      justify-content: center;
     }
     .card-back::before {
-      content: '✦'; font-size: 28px; color: rgba(201,162,39,0.5);
-      text-shadow: 0 0 16px rgba(201,162,39,0.4);
+      content: '✦'; font-size: 32px; color: rgba(201,162,39,0.55);
+      text-shadow: 0 0 18px rgba(201,162,39,0.45);
     }
     .card-back::after {
       content: ''; position: absolute; inset: 8px;
-      border: 1px solid rgba(201,162,39,0.2); border-radius: 4px;
+      border: 1px solid rgba(201,162,39,0.22); border-radius: 4px;
     }
+
+    /* Лицевая сторона */
     .card-front {
-      background: linear-gradient(160deg, #1e1428 0%, #0e0a14 100%);
-      border: 1px solid rgba(201,162,39,0.35);
-      transform: rotateY(180deg); text-align: center;
+      background: linear-gradient(165deg, #1f152c 0%, #0d0914 100%);
+      border: 1px solid rgba(201,162,39,0.4);
+      transform: rotateY(180deg);
+      padding: 10px 8px 12px;
+      text-align: center;
+      justify-content: flex-start;
     }
     .card-front::before {
       content: ''; position: absolute; inset: 0;
-      background: radial-gradient(circle at 50% 0%, rgba(201,162,39,0.12) 0%, transparent 60%);
+      background: radial-gradient(circle at 50% 18%, rgba(201,162,39,0.15) 0%, transparent 55%);
       pointer-events: none; border-radius: 8px;
     }
-    .card-position { font-size: 9px; letter-spacing: 1.6px; text-transform: uppercase; color: rgba(201,162,39,0.65); margin-bottom: 6px; }
-    .card-name { font-size: 13px; color: var(--gold); margin-bottom: 3px; line-height: 1.2; text-shadow: 0 0 12px rgba(201,162,39,0.3); }
-    .card-orient { font-size: 10px; color: rgba(232,224,213,0.4); margin-bottom: 7px; }
-    .card-meaning { font-size: 11px; line-height: 1.35; color: rgba(232,224,213,0.85); }
+
+    .card-symbol {
+      font-size: 28px;
+      line-height: 1;
+      margin: 6px 0 8px;
+      filter: drop-shadow(0 0 8px rgba(201,162,39,0.45));
+      user-select: none;
+    }
+    .card-position {
+      font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+      color: rgba(201,162,39,0.7); margin-bottom: 2px;
+    }
+    .card-name {
+      font-size: 13px; color: var(--gold); margin-bottom: 2px; line-height: 1.2;
+      text-shadow: 0 0 10px rgba(201,162,39,0.35);
+    }
+    .card-orient {
+      font-size: 10px; color: rgba(232,224,213,0.4); margin-bottom: 6px;
+    }
+    .card-meaning {
+      font-size: 11px; line-height: 1.35; color: rgba(232,224,213,0.88);
+    }
+
     .summary {
-      width: 100%; padding: 16px 18px; background: rgba(18,10,20,0.75);
+      width: 100%; padding: 16px 18px; background: rgba(18,10,20,0.78);
       border: 1px solid rgba(201,162,39,0.22); border-radius: 8px;
       font-size: 13px; line-height: 1.55; color: rgba(232,224,213,0.9); text-align: center;
-      opacity: 0; animation: fadeIn 0.6s ease 1.1s forwards;
+      opacity: 0; animation: fadeIn 0.6s ease 1.15s forwards;
     }
     .summary strong { color: var(--gold); font-weight: normal; }
     @keyframes fadeIn { to { opacity: 1; } }
+
     .actions { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 6px; width: 100%; }
     .btn-again, .btn-pay {
       padding: 12px 26px; border: 1px solid rgba(201,162,39,0.4); background: transparent;
@@ -197,29 +226,30 @@
       tg.setBackgroundColor('#120a08');
     }
 
+    // Каждая карта имеет свой символ аркана
     const deck = [
-      { name: "Шут", upright: "Новые начинания, свобода, спонтанность", reversed: "Безрассудство, наивность, хаос" },
-      { name: "Маг", upright: "Сила воли, мастерство, концентрация", reversed: "Манипуляции, неуверенность" },
-      { name: "Жрица", upright: "Интуиция, тайны, внутренний голос", reversed: "Секреты, подавленные чувства" },
-      { name: "Императрица", upright: "Изобилие, забота, творчество", reversed: "Застой, зависимость" },
-      { name: "Император", upright: "Структура, власть, стабильность", reversed: "Тирания, жёсткость" },
-      { name: "Иерофант", upright: "Традиции, учение, духовный путь", reversed: "Догма, бунт против правил" },
-      { name: "Влюблённые", upright: "Выбор, гармония, союз", reversed: "Разлад, сомнения" },
-      { name: "Колесница", upright: "Победа, движение вперёд, контроль", reversed: "Хаос, потеря направления" },
-      { name: "Сила", upright: "Мужество, мягкая сила, терпение", reversed: "Слабость, сомнения в себе" },
-      { name: "Отшельник", upright: "Поиск истины, уединение, мудрость", reversed: "Изоляция, одиночество" },
-      { name: "Колесо Фортуны", upright: "Перемены, удача, циклы", reversed: "Неудача, сопротивление переменам" },
-      { name: "Справедливость", upright: "Баланс, правда, ответственность", reversed: "Несправедливость, предвзятость" },
-      { name: "Повешенный", upright: "Жертва, новый взгляд, пауза", reversed: "Застой, бессмысленные жертвы" },
-      { name: "Смерть", upright: "Трансформация, конец старого", reversed: "Страх перемен, застой" },
-      { name: "Умеренность", upright: "Гармония, баланс, исцеление", reversed: "Крайности, дисбаланс" },
-      { name: "Дьявол", upright: "Привязанности, искушения, тень", reversed: "Освобождение, осознание" },
-      { name: "Башня", upright: "Внезапные перемены, разрушение иллюзий", reversed: "Избегание краха, страх" },
-      { name: "Звезда", upright: "Надежда, вдохновение, исцеление", reversed: "Отчаяние, потеря веры" },
-      { name: "Луна", upright: "Иллюзии, страхи, подсознание", reversed: "Ясность, выход из тумана" },
-      { name: "Солнце", upright: "Успех, радость, ясность", reversed: "Временные трудности, эго" },
-      { name: "Суд", upright: "Пробуждение, решение, призвание", reversed: "Сомнения, отказ от перемен" },
-      { name: "Мир", upright: "Завершение, целостность, достижение", reversed: "Незавершённость, задержки" }
+      { name: "Шут",       symbol: "🃏", upright: "Новые начинания, свобода, спонтанность", reversed: "Безрассудство, наивность, хаос" },
+      { name: "Маг",       symbol: "✧", upright: "Сила воли, мастерство, концентрация", reversed: "Манипуляции, неуверенность" },
+      { name: "Жрица",     symbol: "☽", upright: "Интуиция, тайны, внутренний голос", reversed: "Секреты, подавленные чувства" },
+      { name: "Императрица", symbol: "♛", upright: "Изобилие, забота, творчество", reversed: "Застой, зависимость" },
+      { name: "Император", symbol: "♚", upright: "Структура, власть, стабильность", reversed: "Тирания, жёсткость" },
+      { name: "Иерофант",  symbol: "✝", upright: "Традиции, учение, духовный путь", reversed: "Догма, бунт против правил" },
+      { name: "Влюблённые", symbol: "♡", upright: "Выбор, гармония, союз", reversed: "Разлад, сомнения" },
+      { name: "Колесница", symbol: "⚔", upright: "Победа, движение вперёд, контроль", reversed: "Хаос, потеря направления" },
+      { name: "Сила",      symbol: "♌", upright: "Мужество, мягкая сила, терпение", reversed: "Слабость, сомнения в себе" },
+      { name: "Отшельник", symbol: "🕯", upright: "Поиск истины, уединение, мудрость", reversed: "Изоляция, одиночество" },
+      { name: "Колесо Фортуны", symbol: "☯", upright: "Перемены, удача, циклы", reversed: "Неудача, сопротивление переменам" },
+      { name: "Справедливость", symbol: "⚖", upright: "Баланс, правда, ответственность", reversed: "Несправедливость, предвзятость" },
+      { name: "Повешенный", symbol: "⤵", upright: "Жертва, новый взгляд, пауза", reversed: "Застой, бессмысленные жертвы" },
+      { name: "Смерть",    symbol: "☠", upright: "Трансформация, конец старого", reversed: "Страх перемен, застой" },
+      { name: "Умеренность", symbol: "⚗", upright: "Гармония, баланс, исцеление", reversed: "Крайности, дисбаланс" },
+      { name: "Дьявол",    symbol: "⛧", upright: "Привязанности, искушения, тень", reversed: "Освобождение, осознание" },
+      { name: "Башня",     symbol: "⚡", upright: "Внезапные перемены, разрушение иллюзий", reversed: "Избегание краха, страх" },
+      { name: "Звезда",    symbol: "★", upright: "Надежда, вдохновение, исцеление", reversed: "Отчаяние, потеря веры" },
+      { name: "Луна",      symbol: "☾", upright: "Иллюзии, страхи, подсознание", reversed: "Ясность, выход из тумана" },
+      { name: "Солнце",    symbol: "☀", upright: "Успех, радость, ясность", reversed: "Временные трудности, эго" },
+      { name: "Суд",       symbol: "📯", upright: "Пробуждение, решение, призвание", reversed: "Сомнения, отказ от перемен" },
+      { name: "Мир",       symbol: "✦", upright: "Завершение, целостность, достижение", reversed: "Незавершённость, задержки" }
     ];
 
     const positions = ["Прошлое", "Настоящее", "Будущее"];
@@ -326,6 +356,7 @@
           <div class="card-face card-back"></div>
           <div class="card-face card-front">
             <div class="card-position">${positions[i]}</div>
+            <div class="card-symbol">${card.symbol}</div>
             <div class="card-name">${card.name}</div>
             <div class="card-orient">${orient}</div>
             <div class="card-meaning">${meaning}</div>
@@ -373,7 +404,7 @@
 
         if (!data.invoiceUrl) {
           console.error(data);
-          alert('Не удалось создать счёт. Проверь настройки бота.');
+          alert('Не удалось создать счёт. Проверь, что BOT_TOKEN добавлен в Vercel.');
           return;
         }
 
