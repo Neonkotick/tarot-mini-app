@@ -1,12 +1,12 @@
 /**
  * Cloudflare Worker — Таро Mini App + оплата Stars
- * 
- * Как установить:
- * 1. Cloudflare → Workers & Pages → Create → Create Worker
+ *
+ * Установка:
+ * 1. Cloudflare → Workers → Create Worker (или Edit существующий)
  * 2. Вставь этот код целиком
- * 3. Settings → Variables → Add secret: BOT_TOKEN = токен бота
+ * 3. Settings → Variables and Secrets → Add secret: BOT_TOKEN
  * 4. Save and Deploy
- * 5. В BotFather укажи URL вида https://xxx.workers.dev
+ * 5. BotFather → Menu Button → URL воркера
  */
 
 const HTML = `<!DOCTYPE html>
@@ -26,7 +26,7 @@ const HTML = `<!DOCTYPE html>
     .candle-glow{position:fixed;width:120px;height:120px;border-radius:50%;filter:blur(40px);opacity:.35;z-index:1;pointer-events:none;animation:flicker 4s ease-in-out infinite alternate}
     .candle-left{left:3%;top:22%;background:#c97b2a}.candle-right{right:3%;top:28%;background:#b86a22;animation-delay:1.5s}
     @keyframes flicker{from{opacity:.25;transform:scale(1)}to{opacity:.42;transform:scale(1.08)}}
-    .dust{position:fixed;inset:0;z-index:2;pointer-events:none;background-image:radial-gradient(1px 1px at 15% 25%,rgba(201,162,39,.5) 0%,transparent 100%),radial-gradient(1px 1px at 75% 15%,rgba(255,240,200,.35) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 45% 70%,rgba(201,162,39,.4) 0%,transparent 100%),radial-gradient(1px 1px at 85% 55%,rgba(255,255,255,.25) 0%,transparent 100%);background-size:180px 180px;opacity:.5;will-change:transform}
+    .dust{position:fixed;inset:0;z-index:2;pointer-events:none;background-image:radial-gradient(1px 1px at 15% 25%,rgba(201,162,39,.5) 0%,transparent 100%),radial-gradient(1px 1px at 75% 15%,rgba(255,240,200,.35) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 45% 70%,rgba(201,162,39,.4) 0%,transparent 100%),radial-gradient(1px 1px at 85% 55%,rgba(255,255,255,.25) 0%,transparent 100%);background-size:180px 180px;opacity:.5}
     .app{position:relative;z-index:10;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 14px 40px}
     .title{font-size:12px;letter-spacing:3.5px;text-transform:uppercase;color:rgba(232,224,213,.5);margin-bottom:28px;text-align:center}
     .free-info{font-size:12px;color:rgba(201,162,39,.7);margin-bottom:18px;letter-spacing:1px;text-align:center}
@@ -38,7 +38,7 @@ const HTML = `<!DOCTYPE html>
     .spread{display:none;width:100%;max-width:440px;flex-direction:column;align-items:center;gap:18px}
     .spread.active{display:flex}
     .hint{font-size:12px;color:rgba(201,162,39,.65);letter-spacing:1px;text-align:center;min-height:18px}
-    .deck-area{height:190px;width:100%;position:relative;display:flex;align-items:center;justify-content:center}
+    .deck-area{height:190px;width:100%;display:flex;align-items:center;justify-content:center}
     .deck-stack{position:relative;width:110px;height:160px}
     .deck-card{position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 50% 45%,#2a1a38 0%,#120c1a 70%),repeating-linear-gradient(45deg,transparent,transparent 5px,rgba(201,162,39,.08) 5px,rgba(201,162,39,.08) 6px);border:1px solid rgba(201,162,39,.4);box-shadow:0 4px 14px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center}
     .deck-card::before{content:'✦';font-size:26px;color:rgba(201,162,39,.5);text-shadow:0 0 12px rgba(201,162,39,.4)}
@@ -50,27 +50,78 @@ const HTML = `<!DOCTYPE html>
     .deck-stack.shuffling .deck-card:nth-child(4){animation-delay:.24s}
     .deck-stack.shuffling .deck-card:nth-child(5){animation-delay:.32s}
     @keyframes shuffleCard{0%{transform:translate(0,0) rotate(0)}50%{transform:translate(var(--sx),var(--sy)) rotate(var(--sr))}100%{transform:translate(0,0) rotate(0)}}
-    .cards{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;perspective:1200px;min-height:190px}
-    .card-wrap{width:112px;height:168px;position:relative;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;transition:transform .7s cubic-bezier(.4,.2,.2,1);cursor:pointer;opacity:0}
+    .cards{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;min-height:190px}
+
+    /* ===== Надёжный переворот без 3D (не пропадает на мобильных) ===== */
+    .card-wrap{
+      width:112px;height:168px;position:relative;
+      cursor:pointer;opacity:0;
+      border-radius:9px;
+    }
     .card-wrap.dealt{animation:dealIn .55s ease forwards}
     .card-wrap:nth-child(1).dealt{animation-delay:.05s}
     .card-wrap:nth-child(2).dealt{animation-delay:.18s}
     .card-wrap:nth-child(3).dealt{animation-delay:.31s}
-    @keyframes dealIn{from{opacity:0;transform:translateY(-40px) scale(.85)}to{opacity:1;transform:translateY(0) scale(1)}}
-    .card-wrap.flipped{transform:rotateY(180deg);-webkit-transform:rotateY(180deg)}
-    .card-wrap.glow-flip{animation:glowPulse .85s ease}
-    @keyframes glowPulse{0%{filter:drop-shadow(0 0 0 rgba(201,162,39,0))}40%{filter:drop-shadow(0 0 18px rgba(201,162,39,.75))}100%{filter:drop-shadow(0 0 6px rgba(201,162,39,.25))}}
-    .card-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:9px;display:flex;flex-direction:column;align-items:center;box-shadow:0 0 0 1px rgba(0,0,0,.45),0 10px 26px rgba(0,0,0,.55);overflow:hidden}
-    .card-back{background:radial-gradient(circle at 50% 40%,#2e1c42 0%,#140e1c 75%);border:1px solid rgba(201,162,39,.45);justify-content:center;z-index:2}
-    .card-back .ornament{width:70%;height:70%;border:1px solid rgba(201,162,39,.25);border-radius:6px;display:flex;align-items:center;justify-content:center;position:relative}
+    @keyframes dealIn{from{opacity:0;transform:translateY(-30px) scale(.9)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+    .card-face{
+      position:absolute;inset:0;border-radius:9px;
+      display:flex;flex-direction:column;align-items:center;
+      box-shadow:0 0 0 1px rgba(0,0,0,.45),0 10px 26px rgba(0,0,0,.55);
+      overflow:hidden;
+      transition:opacity .35s ease, transform .35s ease, box-shadow .35s ease;
+    }
+
+    .card-back{
+      background:radial-gradient(circle at 50% 40%,#2e1c42 0%,#140e1c 75%);
+      border:1px solid rgba(201,162,39,.45);
+      justify-content:center;
+      z-index:2;
+      opacity:1;
+      transform:scaleX(1);
+    }
+    .card-back .ornament{
+      width:70%;height:70%;border:1px solid rgba(201,162,39,.25);
+      border-radius:6px;display:flex;align-items:center;justify-content:center;position:relative;
+    }
     .card-back .ornament::before{content:'✦';font-size:28px;color:rgba(201,162,39,.55);text-shadow:0 0 14px rgba(201,162,39,.45)}
     .card-back .ornament::after{content:'';position:absolute;inset:6px;border:1px solid rgba(201,162,39,.15);border-radius:4px}
-    .card-front{transform:rotateY(180deg);-webkit-transform:rotateY(180deg);padding:8px 6px 10px;text-align:center;justify-content:flex-start;border:1px solid rgba(201,162,39,.5);background:#120c18;z-index:1}
-    .card-front .arcana-art{width:100%;height:62px;margin:2px 0 6px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:32px;position:relative;box-shadow:inset 0 0 24px rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.1)}
+
+    .card-front{
+      padding:8px 6px 10px;text-align:center;justify-content:flex-start;
+      border:1px solid rgba(201,162,39,.5);
+      background:#120c18;
+      z-index:1;
+      opacity:0;
+      transform:scaleX(0.6);
+      pointer-events:none;
+    }
+
+    /* Состояние после переворота */
+    .card-wrap.flipped .card-back{
+      opacity:0;
+      transform:scaleX(0.6);
+      pointer-events:none;
+      z-index:1;
+    }
+    .card-wrap.flipped .card-front{
+      opacity:1;
+      transform:scaleX(1);
+      pointer-events:auto;
+      z-index:2;
+      box-shadow:0 0 0 1px rgba(201,162,39,.35),0 0 20px rgba(201,162,39,.35),0 10px 26px rgba(0,0,0,.55);
+    }
+
+    .card-front .arcana-art{
+      width:100%;height:62px;margin:2px 0 6px;border-radius:6px;
+      display:flex;align-items:center;justify-content:center;font-size:32px;
+      box-shadow:inset 0 0 24px rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.1);
+    }
     .card-position{font-size:8px;letter-spacing:1.4px;text-transform:uppercase;color:rgba(201,162,39,.75);margin-bottom:2px}
     .card-name{font-size:12px;color:var(--gold);margin-bottom:2px;line-height:1.15;text-shadow:0 0 8px rgba(201,162,39,.4);font-weight:bold}
     .card-orient{font-size:9px;color:rgba(232,224,213,.45);margin-bottom:5px}
     .card-meaning{font-size:10px;line-height:1.35;color:rgba(232,224,213,.92)}
+
     .art-shut{background:linear-gradient(160deg,#4a3520,#1e1408);color:#f0d080}
     .art-mag{background:linear-gradient(160deg,#3a2450,#140820);color:#e0b0ff}
     .art-zhritsa{background:linear-gradient(160deg,#1e2a48,#0a1020);color:#b0d0ff}
@@ -93,6 +144,7 @@ const HTML = `<!DOCTYPE html>
     .art-solntse{background:linear-gradient(160deg,#4a3818,#1c1408);color:#ffe890}
     .art-sud{background:linear-gradient(160deg,#2c2c1c,#14140a);color:#f0e090}
     .art-mir{background:linear-gradient(160deg,#1e3840,#0a1c20);color:#b0f0d0}
+
     .summary{width:100%;padding:14px 16px;background:rgba(18,10,20,.82);border:1px solid rgba(201,162,39,.22);border-radius:8px;font-size:13px;line-height:1.5;color:rgba(232,224,213,.9);text-align:center;opacity:0;transform:translateY(8px);transition:opacity .5s,transform .5s}
     .summary.visible{opacity:1;transform:translateY(0)}
     .summary strong{color:var(--gold);font-weight:normal}
@@ -134,25 +186,59 @@ const HTML = `<!DOCTYPE html>
   </div>
   <script>
     const tg=window.Telegram?.WebApp;if(tg){tg.ready();tg.expand();tg.setHeaderColor('#120a08');tg.setBackgroundColor('#120a08')}
-    const deck=[{name:"Шут",symbol:"🃏",art:"art-shut",upright:"Новые начинания, свобода, спонтанность",reversed:"Безрассудство, наивность, хаос"},{name:"Маг",symbol:"✧",art:"art-mag",upright:"Сила воли, мастерство, концентрация",reversed:"Манипуляции, неуверенность"},{name:"Жрица",symbol:"☽",art:"art-zhritsa",upright:"Интуиция, тайны, внутренний голос",reversed:"Секреты, подавленные чувства"},{name:"Императрица",symbol:"♛",art:"art-imperatrica",upright:"Изобилие, забота, творчество",reversed:"Застой, зависимость"},{name:"Император",symbol:"♚",art:"art-imperator",upright:"Структура, власть, стабильность",reversed:"Тирания, жёсткость"},{name:"Иерофант",symbol:"✝",art:"art-ierofant",upright:"Традиции, учение, духовный путь",reversed:"Догма, бунт против правил"},{name:"Влюблённые",symbol:"♡",art:"art-vlyublennye",upright:"Выбор, гармония, союз",reversed:"Разлад, сомнения"},{name:"Колесница",symbol:"⚔",art:"art-kolesnica",upright:"Победа, движение вперёд, контроль",reversed:"Хаос, потеря направления"},{name:"Сила",symbol:"♌",art:"art-sila",upright:"Мужество, мягкая сила, терпение",reversed:"Слабость, сомнения в себе"},{name:"Отшельник",symbol:"🕯",art:"art-otshelnik",upright:"Поиск истины, уединение, мудрость",reversed:"Изоляция, одиночество"},{name:"Колесо Фортуны",symbol:"☯",art:"art-koleso",upright:"Перемены, удача, циклы",reversed:"Неудача, сопротивление переменам"},{name:"Справедливость",symbol:"⚖",art:"art-spravedlivost",upright:"Баланс, правда, ответственность",reversed:"Несправедливость, предвзятость"},{name:"Повешенный",symbol:"⤵",art:"art-poveshennyy",upright:"Жертва, новый взгляд, пауза",reversed:"Застой, бессмысленные жертвы"},{name:"Смерть",symbol:"☠",art:"art-smert",upright:"Трансформация, конец старого",reversed:"Страх перемен, застой"},{name:"Умеренность",symbol:"⚗",art:"art-umerennost",upright:"Гармония, баланс, исцеление",reversed:"Крайности, дисбаланс"},{name:"Дьявол",symbol:"⛧",art:"art-dyavol",upright:"Привязанности, искушения, тень",reversed:"Освобождение, осознание"},{name:"Башня",symbol:"⚡",art:"art-bashnya",upright:"Внезапные перемены, разрушение иллюзий",reversed:"Избегание краха, страх"},{name:"Звезда",symbol:"★",art:"art-zvezda",upright:"Надежда, вдохновение, исцеление",reversed:"Отчаяние, потеря веры"},{name:"Луна",symbol:"☾",art:"art-luna",upright:"Иллюзии, страхи, подсознание",reversed:"Ясность, выход из тумана"},{name:"Солнце",symbol:"☀",art:"art-solntse",upright:"Успех, радость, ясность",reversed:"Временные трудности, эго"},{name:"Суд",symbol:"📯",art:"art-sud",upright:"Пробуждение, решение, призвание",reversed:"Сомнения, отказ от перемен"},{name:"Мир",symbol:"✦",art:"art-mir",upright:"Завершение, целостность, достижение",reversed:"Незавершённость, задержки"}];
-    const positions=["Прошлое","Настоящее","Будущее"];const DAILY_FREE=3;const FLIP_PRICE=5;const STORAGE_DATE='tarot_day';const STORAGE_FREE='tarot_free_today';
-    let currentCards=[],flippedCount=0,isFreeSpread=true;
+    const deck=[
+      {name:"Шут",symbol:"🃏",art:"art-shut",upright:"Новые начинания, свобода, спонтанность",reversed:"Безрассудство, наивность, хаос"},
+      {name:"Маг",symbol:"✧",art:"art-mag",upright:"Сила воли, мастерство, концентрация",reversed:"Манипуляции, неуверенность"},
+      {name:"Жрица",symbol:"☽",art:"art-zhritsa",upright:"Интуиция, тайны, внутренний голос",reversed:"Секреты, подавленные чувства"},
+      {name:"Императрица",symbol:"♛",art:"art-imperatrica",upright:"Изобилие, забота, творчество",reversed:"Застой, зависимость"},
+      {name:"Император",symbol:"♚",art:"art-imperator",upright:"Структура, власть, стабильность",reversed:"Тирания, жёсткость"},
+      {name:"Иерофант",symbol:"✝",art:"art-ierofant",upright:"Традиции, учение, духовный путь",reversed:"Догма, бунт против правил"},
+      {name:"Влюблённые",symbol:"♡",art:"art-vlyublennye",upright:"Выбор, гармония, союз",reversed:"Разлад, сомнения"},
+      {name:"Колесница",symbol:"⚔",art:"art-kolesnica",upright:"Победа, движение вперёд, контроль",reversed:"Хаос, потеря направления"},
+      {name:"Сила",symbol:"♌",art:"art-sila",upright:"Мужество, мягкая сила, терпение",reversed:"Слабость, сомнения в себе"},
+      {name:"Отшельник",symbol:"🕯",art:"art-otshelnik",upright:"Поиск истины, уединение, мудрость",reversed:"Изоляция, одиночество"},
+      {name:"Колесо Фортуны",symbol:"☯",art:"art-koleso",upright:"Перемены, удача, циклы",reversed:"Неудача, сопротивление переменам"},
+      {name:"Справедливость",symbol:"⚖",art:"art-spravedlivost",upright:"Баланс, правда, ответственность",reversed:"Несправедливость, предвзятость"},
+      {name:"Повешенный",symbol:"⤵",art:"art-poveshennyy",upright:"Жертва, новый взгляд, пауза",reversed:"Застой, бессмысленные жертвы"},
+      {name:"Смерть",symbol:"☠",art:"art-smert",upright:"Трансформация, конец старого",reversed:"Страх перемен, застой"},
+      {name:"Умеренность",symbol:"⚗",art:"art-umerennost",upright:"Гармония, баланс, исцеление",reversed:"Крайности, дисбаланс"},
+      {name:"Дьявол",symbol:"⛧",art:"art-dyavol",upright:"Привязанности, искушения, тень",reversed:"Освобождение, осознание"},
+      {name:"Башня",symbol:"⚡",art:"art-bashnya",upright:"Внезапные перемены, разрушение иллюзий",reversed:"Избегание краха, страх"},
+      {name:"Звезда",symbol:"★",art:"art-zvezda",upright:"Надежда, вдохновение, исцеление",reversed:"Отчаяние, потеря веры"},
+      {name:"Луна",symbol:"☾",art:"art-luna",upright:"Иллюзии, страхи, подсознание",reversed:"Ясность, выход из тумана"},
+      {name:"Солнце",symbol:"☀",art:"art-solntse",upright:"Успех, радость, ясность",reversed:"Временные трудности, эго"},
+      {name:"Суд",symbol:"📯",art:"art-sud",upright:"Пробуждение, решение, призвание",reversed:"Сомнения, отказ от перемен"},
+      {name:"Мир",symbol:"✦",art:"art-mir",upright:"Завершение, целостность, достижение",reversed:"Незавершённость, задержки"}
+    ];
+    const positions=["Прошлое","Настоящее","Будущее"];
+    const DAILY_FREE=3, FLIP_PRICE=5, STORAGE_DATE='tarot_day', STORAGE_FREE='tarot_free_today';
+    let currentCards=[], flippedCount=0, isFreeSpread=true;
+
     function todayKey(){const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
     function getFreeLeft(){const saved=localStorage.getItem(STORAGE_DATE),today=todayKey();if(saved!==today){localStorage.setItem(STORAGE_DATE,today);localStorage.setItem(STORAGE_FREE,String(DAILY_FREE));return DAILY_FREE}return Math.max(0,parseInt(localStorage.getItem(STORAGE_FREE)||DAILY_FREE,10))}
     function spendFreeSpread(){const left=getFreeLeft();if(left>0){localStorage.setItem(STORAGE_FREE,String(left-1));return true}return false}
-    function updateFreeInfo(){const left=getFreeLeft(),el=document.getElementById('free-info');el.textContent=left>0?`Сегодня бесплатных раскладов: ${left}`:`Бесплатные расклады на сегодня закончились · ⭐${FLIP_PRICE} за карту`}
+    function updateFreeInfo(){const left=getFreeLeft(),el=document.getElementById('free-info');el.textContent=left>0?'Сегодня бесплатных раскладов: '+left:'Бесплатные расклады на сегодня закончились · ⭐'+FLIP_PRICE+' за карту'}
+
     const dust=document.getElementById('dust');
-    function moveDust(x,y){const cx=(x/window.innerWidth-.5)*2,cy=(y/window.innerHeight-.5)*2;dust.style.transform=`translate(${cx*12}px,${cy*12}px)`}
+    function moveDust(x,y){const cx=(x/window.innerWidth-.5)*2,cy=(y/window.innerHeight-.5)*2;dust.style.transform='translate('+cx*12+'px,'+cy*12+'px)'}
     window.addEventListener('mousemove',e=>moveDust(e.clientX,e.clientY));
     window.addEventListener('deviceorientation',e=>{if(e.gamma!=null&&e.beta!=null)moveDust((e.gamma+90)/180*window.innerWidth,(e.beta+90)/180*window.innerHeight)});
+
     function shuffle(a){const arr=[...a];for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}return arr}
-    function makeSummary(cards){const names=cards.map(c=>c.name).join(', ');const rc=cards.filter(c=>c.isReversed).length;const v={0:[`Карты <strong>${names}</strong> складываются в ясный путь. Прошлое отпустило, настоящее поддерживает, будущее открывает двери.`,`Связка <strong>${names}</strong> говорит о гармонии. Сейчас — момент силы.`],1:[`В раскладе <strong>${names}</strong> одна карта перевёрнута — точка внимания. Остальное течёт в нужном направлении.`,`Карты <strong>${names}</strong>: путь благоприятен, но есть урок, который стоит принять.`],2:[`Связка <strong>${names}</strong> требует осторожности. Пора замедлиться и пересмотреть курс.`,`Расклад <strong>${names}</strong> шепчет о внутренних противоречиях. Найди точку равновесия.`],3:[`Все три карты — <strong>${names}</strong> — перевёрнуты. Важно не действовать, а слушать.`,`Расклад <strong>${names}</strong> — период очищения. Старое уходит, место новому.`]};const list=v[rc]||v[1];return list[Math.floor(Math.random()*list.length)]}
+    function makeSummary(cards){const names=cards.map(c=>c.name).join(', ');const rc=cards.filter(c=>c.isReversed).length;const v={0:['Карты <strong>'+names+'</strong> складываются в ясный путь. Прошлое отпустило, настоящее поддерживает, будущее открывает двери.','Связка <strong>'+names+'</strong> говорит о гармонии. Сейчас — момент силы.'],1:['В раскладе <strong>'+names+'</strong> одна карта перевёрнута — точка внимания. Остальное течёт в нужном направлении.','Карты <strong>'+names+'</strong>: путь благоприятен, но есть урок, который стоит принять.'],2:['Связка <strong>'+names+'</strong> требует осторожности. Пора замедлиться и пересмотреть курс.','Расклад <strong>'+names+'</strong> шепчет о внутренних противоречиях. Найди точку равновесия.'],3:['Все три карты — <strong>'+names+'</strong> — перевёрнуты. Важно не действовать, а слушать.','Расклад <strong>'+names+'</strong> — период очищения. Старое уходит, место новому.']};const list=v[rc]||v[1];return list[Math.floor(Math.random()*list.length)]}
+
     function resetSpreadUI(){flippedCount=0;currentCards=[];document.getElementById('summary').classList.remove('visible');document.getElementById('summary').innerHTML='';document.getElementById('again-btn').classList.add('hidden');document.getElementById('pay-hint').classList.add('hidden');document.getElementById('cards-container').innerHTML='';document.getElementById('cards-container').classList.add('hidden');document.getElementById('deck-area').classList.remove('hidden');document.getElementById('hint').textContent='Тусуем колоду…'}
+
     function startDrawSequence(){isFreeSpread=spendFreeSpread();updateFreeInfo();document.getElementById('start-screen').classList.add('hidden');document.getElementById('spread-screen').classList.add('active');resetSpreadUI();if(!isFreeSpread)document.getElementById('pay-hint').classList.remove('hidden');const stack=document.getElementById('deck-stack');stack.classList.add('shuffling');setTimeout(()=>{stack.classList.remove('shuffling');document.getElementById('deck-area').classList.add('hidden');dealFaceDownCards()},1400)}
-    function dealFaceDownCards(){currentCards=shuffle(deck).slice(0,3).map(c=>({...c,isReversed:Math.random()<.5}));flippedCount=0;const container=document.getElementById('cards-container');container.innerHTML='';container.classList.remove('hidden');document.getElementById('hint').textContent=isFreeSpread?'Коснись карты, чтобы открыть её':`Коснись карты · ⭐${FLIP_PRICE} за открытие`;currentCards.forEach((card,i)=>{const meaning=card.isReversed?card.reversed:card.upright;const orient=card.isReversed?'перевёрнутая':'прямая';const wrap=document.createElement('div');wrap.className='card-wrap';wrap.innerHTML=`<div class="card-face card-back"><div class="ornament"></div></div><div class="card-face card-front"><div class="card-position">${positions[i]}</div><div class="arcana-art ${card.art}">${card.symbol}</div><div class="card-name">${card.name}</div><div class="card-orient">${orient}</div><div class="card-meaning">${meaning}</div></div>`;wrap.addEventListener('click',()=>onCardTap(wrap));container.appendChild(wrap);setTimeout(()=>wrap.classList.add('dealt'),30)})}
-    function flipCard(wrap){if(wrap.classList.contains('flipped'))return;wrap.classList.add('flipped','glow-flip');flippedCount++;if(tg?.HapticFeedback)tg.HapticFeedback.impactOccurred('light');if(flippedCount>=3){document.getElementById('hint').textContent='';setTimeout(()=>{const s=document.getElementById('summary');s.innerHTML=makeSummary(currentCards);s.classList.add('visible');document.getElementById('again-btn').classList.remove('hidden')},700)}else{document.getElementById('hint').textContent=isFreeSpread?`Открыто ${flippedCount} из 3 — коснись следующей`:`Открыто ${flippedCount} из 3 · ⭐${FLIP_PRICE} за следующую`}}
+
+    function dealFaceDownCards(){currentCards=shuffle(deck).slice(0,3).map(c=>({...c,isReversed:Math.random()<.5}));flippedCount=0;const container=document.getElementById('cards-container');container.innerHTML='';container.classList.remove('hidden');document.getElementById('hint').textContent=isFreeSpread?'Коснись карты, чтобы открыть её':'Коснись карты · ⭐'+FLIP_PRICE+' за открытие';currentCards.forEach((card,i)=>{const meaning=card.isReversed?card.reversed:card.upright;const orient=card.isReversed?'перевёрнутая':'прямая';const wrap=document.createElement('div');wrap.className='card-wrap';wrap.innerHTML='<div class="card-face card-back"><div class="ornament"></div></div><div class="card-face card-front"><div class="card-position">'+positions[i]+'</div><div class="arcana-art '+card.art+'">'+card.symbol+'</div><div class="card-name">'+card.name+'</div><div class="card-orient">'+orient+'</div><div class="card-meaning">'+meaning+'</div></div>';wrap.addEventListener('click',()=>onCardTap(wrap));container.appendChild(wrap);setTimeout(()=>wrap.classList.add('dealt'),30)})}
+
+    function flipCard(wrap){if(wrap.classList.contains('flipped'))return;wrap.classList.add('flipped');flippedCount++;if(tg?.HapticFeedback)tg.HapticFeedback.impactOccurred('light');if(flippedCount>=3){document.getElementById('hint').textContent='';setTimeout(()=>{const s=document.getElementById('summary');s.innerHTML=makeSummary(currentCards);s.classList.add('visible');document.getElementById('again-btn').classList.remove('hidden')},450)}else{document.getElementById('hint').textContent=isFreeSpread?'Открыто '+flippedCount+' из 3 — коснись следующей':'Открыто '+flippedCount+' из 3 · ⭐'+FLIP_PRICE+' за следующую'}}
+
     async function onCardTap(wrap){if(wrap.classList.contains('flipped'))return;if(isFreeSpread){flipCard(wrap);return}await payForFlip(wrap)}
+
     async function payForFlip(wrap){if(!tg){alert('Открой приложение внутри Telegram');return}try{const userId=tg.initDataUnsafe?.user?.id||'unknown';const r=await fetch('/api/create-invoice',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId,amount:FLIP_PRICE})});const data=await r.json();if(!data.invoiceUrl){alert('Не удалось создать счёт. Проверь BOT_TOKEN в Worker Secrets.');return}tg.openInvoice(data.invoiceUrl,status=>{if(status==='paid'){flipCard(wrap);if(tg.HapticFeedback)tg.HapticFeedback.notificationOccurred('success')}})}catch(e){console.error(e);alert('Ошибка при создании платежа')}}
+
     document.getElementById('draw-btn').addEventListener('click',startDrawSequence);
     document.getElementById('again-btn').addEventListener('click',()=>{document.getElementById('spread-screen').classList.remove('active');document.getElementById('start-screen').classList.remove('hidden');updateFreeInfo();setTimeout(startDrawSequence,250)});
     updateFreeInfo();
@@ -164,48 +250,41 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    // === API: создание инвойса Stars ===
     if (url.pathname === '/api/create-invoice' && request.method === 'POST') {
       const BOT_TOKEN = env.BOT_TOKEN;
-
       if (!BOT_TOKEN) {
         return new Response(JSON.stringify({ error: 'BOT_TOKEN not configured' }), {
           status: 500,
           headers: { 'Content-Type': 'application/json' }
         });
       }
-
       try {
-        let userId = 'anon';
-        let amount = 5;
+        let userId = 'anon', amount = 5;
         try {
           const body = await request.json();
           userId = body.userId || 'anon';
           if (body.amount && Number(body.amount) > 0) amount = Number(body.amount);
         } catch (e) {}
 
-        const tgRes = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/createInvoiceLink`, {
+        const tgRes = await fetch('https://api.telegram.org/bot' + BOT_TOKEN + '/createInvoiceLink', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             title: 'Открытие карты',
             description: 'Переворот одной карты Таро',
-            payload: `tarot_flip_${userId}_${Date.now()}`,
+            payload: 'tarot_flip_' + userId + '_' + Date.now(),
             provider_token: '',
             currency: 'XTR',
             prices: [{ label: 'Открытие карты', amount }]
           })
         });
-
         const data = await tgRes.json();
-
         if (!data.ok) {
           return new Response(JSON.stringify({ error: data.description || 'Failed' }), {
             status: 500,
             headers: { 'Content-Type': 'application/json' }
           });
         }
-
         return new Response(JSON.stringify({ invoiceUrl: data.result }), {
           status: 200,
           headers: { 'Content-Type': 'application/json' }
@@ -218,12 +297,8 @@ export default {
       }
     }
 
-    // === Отдаём приложение ===
     return new Response(HTML, {
-      headers: {
-        'Content-Type': 'text/html; charset=utf-8',
-        'Cache-Control': 'no-cache'
-      }
+      headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache' }
     });
   }
 };
