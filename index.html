@@ -10,17 +10,19 @@
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
     body{background:var(--wood);color:var(--text);font-family:Georgia,'Times New Roman',serif;min-height:100vh;overflow-x:hidden;position:relative}
     .table-bg{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 50% 30%,rgba(80,40,20,.35) 0%,transparent 55%),radial-gradient(ellipse at 20% 80%,rgba(40,20,10,.5) 0%,transparent 40%),radial-gradient(ellipse at 80% 70%,rgba(50,25,15,.4) 0%,transparent 40%),linear-gradient(180deg,#241610 0%,#120a08 100%)}
-    .table-bg::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(90deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);opacity:.6;pointer-events:none}
-    .velvet{position:fixed;top:10%;bottom:10%;left:50%;transform:translateX(-50%);width:min(94vw,460px);background:radial-gradient(ellipse at 50% 0%,rgba(90,30,60,.25) 0%,transparent 60%),linear-gradient(180deg,#1f0f22 0%,#140a18 100%);border-radius:10px;box-shadow:0 0 0 1px rgba(201,162,39,.12),0 0 60px rgba(0,0,0,.5),inset 0 0 40px rgba(0,0,0,.4);z-index:1;pointer-events:none}
-    .candle-glow{position:fixed;width:120px;height:120px;border-radius:50%;filter:blur(40px);opacity:.35;z-index:1;pointer-events:none;animation:flicker 4s ease-in-out infinite alternate}
-    .candle-left{left:3%;top:22%;background:#c97b2a}.candle-right{right:3%;top:28%;background:#b86a22;animation-delay:1.5s}
-    @keyframes flicker{from{opacity:.25;transform:scale(1)}to{opacity:.42;transform:scale(1.08)}}
-    .dust{position:fixed;inset:0;z-index:2;pointer-events:none;background-image:radial-gradient(1px 1px at 15% 25%,rgba(201,162,39,.5) 0%,transparent 100%),radial-gradient(1px 1px at 75% 15%,rgba(255,240,200,.35) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 45% 70%,rgba(201,162,39,.4) 0%,transparent 100%),radial-gradient(1px 1px at 85% 55%,rgba(255,255,255,.25) 0%,transparent 100%);background-size:180px 180px;opacity:.5}
+    .table-bg::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(90deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);opacity:.55;pointer-events:none}
+    .velvet{position:fixed;top:10%;bottom:10%;left:50%;transform:translateX(-50%);width:min(94vw,460px);background:radial-gradient(ellipse at 50% 0%,rgba(90,30,60,.28) 0%,transparent 60%),linear-gradient(180deg,#1f0f22 0%,#140a18 100%);border-radius:10px;box-shadow:0 0 0 1px rgba(201,162,39,.14),0 0 60px rgba(0,0,0,.5),inset 0 0 40px rgba(0,0,0,.45);z-index:1;pointer-events:none}
+    .candle-glow{position:fixed;width:130px;height:130px;border-radius:50%;filter:blur(42px);opacity:.38;z-index:1;pointer-events:none;animation:flicker 4s ease-in-out infinite alternate}
+    .candle-left{left:2%;top:20%;background:#c97b2a}.candle-right{right:2%;top:26%;background:#b86a22;animation-delay:1.4s}
+    @keyframes flicker{from{opacity:.22;transform:scale(1)}to{opacity:.45;transform:scale(1.1)}}
+    .dust{position:fixed;inset:0;z-index:2;pointer-events:none;background-image:radial-gradient(1px 1px at 15% 25%,rgba(201,162,39,.55) 0%,transparent 100%),radial-gradient(1px 1px at 75% 15%,rgba(255,240,200,.4) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 45% 70%,rgba(201,162,39,.45) 0%,transparent 100%),radial-gradient(1px 1px at 85% 55%,rgba(255,255,255,.28) 0%,transparent 100%);background-size:180px 180px;opacity:.55;animation:dustDrift 18s linear infinite}
+    @keyframes dustDrift{0%{transform:translate(0,0)}50%{transform:translate(-8px,6px)}100%{transform:translate(0,0)}}
     .app{position:relative;z-index:10;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 14px 40px}
-    .title{font-size:12px;letter-spacing:3.5px;text-transform:uppercase;color:rgba(232,224,213,.5);margin-bottom:28px;text-align:center}
+    .title{font-size:12px;letter-spacing:3.5px;text-transform:uppercase;color:rgba(232,224,213,.5);margin-bottom:12px;text-align:center}
+    .ritual{font-size:12px;color:rgba(201,162,39,.55);margin-bottom:20px;text-align:center;letter-spacing:.5px;min-height:18px}
     .free-info{font-size:12px;color:rgba(201,162,39,.7);margin-bottom:18px;letter-spacing:1px;text-align:center}
     .btn-draw{position:relative;padding:18px 42px;min-width:220px;background:linear-gradient(180deg,#2a1c12 0%,#1a100a 100%);border:1px solid var(--gold-dim);border-radius:6px;box-shadow:0 4px 20px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,220,150,.08);cursor:pointer;user-select:none;transition:transform .2s;text-align:center}
-    .btn-draw::before{content:'';position:absolute;inset:5px;border:1px solid rgba(201,162,39,.2);border-radius:3px;pointer-events:none}
+    .btn-draw::before{content:'';position:absolute;inset:5px;border:1px solid rgba(201,162,39,.22);border-radius:3px;pointer-events:none}
     .btn-draw:active{transform:scale(.97)}
     .btn-draw .label{font-size:15px;letter-spacing:2px;color:var(--gold);text-transform:uppercase}
     .btn-draw .sub{display:block;margin-top:6px;font-size:11px;color:rgba(232,224,213,.45);letter-spacing:1px}
@@ -40,25 +42,72 @@
     .deck-stack.shuffling .deck-card:nth-child(5){animation-delay:.32s}
     @keyframes shuffleCard{0%{transform:translate(0,0) rotate(0)}50%{transform:translate(var(--sx),var(--sy)) rotate(var(--sr))}100%{transform:translate(0,0) rotate(0)}}
     .cards{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;min-height:190px}
-    .card-wrap{width:112px;height:168px;position:relative;cursor:pointer;opacity:0;border-radius:9px}
+
+    .card-wrap{width:114px;height:172px;position:relative;cursor:pointer;opacity:0;border-radius:10px}
     .card-wrap.dealt{animation:dealIn .55s ease forwards}
     .card-wrap:nth-child(1).dealt{animation-delay:.05s}
     .card-wrap:nth-child(2).dealt{animation-delay:.18s}
     .card-wrap:nth-child(3).dealt{animation-delay:.31s}
     @keyframes dealIn{from{opacity:0;transform:translateY(-30px) scale(.9)}to{opacity:1;transform:translateY(0) scale(1)}}
-    .card-face{position:absolute;inset:0;border-radius:9px;display:flex;flex-direction:column;align-items:center;box-shadow:0 0 0 1px rgba(0,0,0,.45),0 10px 26px rgba(0,0,0,.55);overflow:hidden;transition:opacity .35s ease,transform .35s ease,box-shadow .35s ease}
-    .card-back{background:radial-gradient(circle at 50% 40%,#2e1c42 0%,#140e1c 75%);border:1px solid rgba(201,162,39,.45);justify-content:center;z-index:2;opacity:1;transform:scaleX(1)}
-    .card-back .ornament{width:70%;height:70%;border:1px solid rgba(201,162,39,.25);border-radius:6px;display:flex;align-items:center;justify-content:center;position:relative}
-    .card-back .ornament::before{content:'✦';font-size:28px;color:rgba(201,162,39,.55);text-shadow:0 0 14px rgba(201,162,39,.45)}
-    .card-back .ornament::after{content:'';position:absolute;inset:6px;border:1px solid rgba(201,162,39,.15);border-radius:4px}
-    .card-front{padding:8px 6px 10px;text-align:center;justify-content:flex-start;border:1px solid rgba(201,162,39,.5);background:#120c18;z-index:1;opacity:0;transform:scaleX(.6);pointer-events:none}
+
+    .card-face{position:absolute;inset:0;border-radius:10px;display:flex;flex-direction:column;align-items:center;box-shadow:0 0 0 1px rgba(0,0,0,.5),0 12px 28px rgba(0,0,0,.55);overflow:hidden;transition:opacity .35s ease,transform .35s ease,box-shadow .35s ease}
+
+    /* Улучшенная рубашка */
+    .card-back{
+      background:
+        radial-gradient(circle at 50% 42%,#352048 0%,#160e20 72%);
+      border:1px solid rgba(201,162,39,.5);
+      justify-content:center;z-index:2;opacity:1;transform:scaleX(1);
+    }
+    .card-back .frame{
+      position:absolute;inset:8px;border:1px solid rgba(201,162,39,.28);border-radius:6px;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .card-back .frame::before{
+      content:'';position:absolute;inset:5px;border:1px solid rgba(201,162,39,.12);border-radius:4px;
+    }
+    .card-back .sigil{
+      font-size:30px;color:rgba(201,162,39,.55);text-shadow:0 0 16px rgba(201,162,39,.5);
+      line-height:1;
+    }
+    .card-back .dots{
+      position:absolute;width:6px;height:6px;border-radius:50%;background:rgba(201,162,39,.35);
+      box-shadow:0 0 6px rgba(201,162,39,.4);
+    }
+    .card-back .dots.tl{top:14px;left:14px}.card-back .dots.tr{top:14px;right:14px}
+    .card-back .dots.bl{bottom:14px;left:14px}.card-back .dots.br{bottom:14px;right:14px}
+
+    .card-front{
+      padding:7px 6px 9px;text-align:center;justify-content:flex-start;
+      border:1px solid rgba(201,162,39,.55);background:#100c16;z-index:1;
+      opacity:0;transform:scaleX(.6);pointer-events:none;
+    }
+    .card-front .inner-frame{
+      position:absolute;inset:5px;border:1px solid rgba(201,162,39,.18);border-radius:6px;pointer-events:none;
+    }
     .card-wrap.flipped .card-back{opacity:0;transform:scaleX(.6);pointer-events:none;z-index:1}
-    .card-wrap.flipped .card-front{opacity:1;transform:scaleX(1);pointer-events:auto;z-index:2;box-shadow:0 0 0 1px rgba(201,162,39,.35),0 0 20px rgba(201,162,39,.35),0 10px 26px rgba(0,0,0,.55)}
-    .card-front .arcana-art{width:100%;height:62px;margin:2px 0 6px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:32px;box-shadow:inset 0 0 24px rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.1)}
-    .card-position{font-size:8px;letter-spacing:1.4px;text-transform:uppercase;color:rgba(201,162,39,.75);margin-bottom:2px}
-    .card-name{font-size:12px;color:var(--gold);margin-bottom:2px;line-height:1.15;text-shadow:0 0 8px rgba(201,162,39,.4);font-weight:bold}
-    .card-orient{font-size:9px;color:rgba(232,224,213,.45);margin-bottom:5px}
-    .card-meaning{font-size:10px;line-height:1.35;color:rgba(232,224,213,.92)}
+    .card-wrap.flipped .card-front{
+      opacity:1;transform:scaleX(1);pointer-events:auto;z-index:2;
+      box-shadow:0 0 0 1px rgba(201,162,39,.4),0 0 22px rgba(201,162,39,.4),0 12px 28px rgba(0,0,0,.55);
+    }
+
+    .card-front .arcana-art{
+      width:100%;height:58px;margin:4px 0 5px;border-radius:5px;
+      display:flex;align-items:center;justify-content:center;font-size:30px;
+      box-shadow:inset 0 0 22px rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.1);
+      position:relative;z-index:1;
+    }
+    .card-position{font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(201,162,39,.75);margin-top:2px;position:relative;z-index:1}
+    .card-name{font-size:12px;color:var(--gold);margin-bottom:2px;line-height:1.15;text-shadow:0 0 10px rgba(201,162,39,.45);font-weight:bold;position:relative;z-index:1}
+    .card-orient{font-size:9px;color:rgba(232,224,213,.45);margin-bottom:4px;position:relative;z-index:1}
+    .card-orient.rev{color:rgba(255,160,140,.75)}
+    .card-meaning{font-size:10px;line-height:1.35;color:rgba(232,224,213,.92);position:relative;z-index:1}
+
+    /* Перевёрнутая карта — лёгкий холодный оттенок */
+    .card-wrap.is-reversed.flipped .card-front{
+      box-shadow:0 0 0 1px rgba(160,140,200,.45),0 0 18px rgba(120,100,180,.3),0 12px 28px rgba(0,0,0,.55);
+    }
+
     .art-shut{background:linear-gradient(160deg,#4a3520,#1e1408);color:#f0d080}
     .art-mag{background:linear-gradient(160deg,#3a2450,#140820);color:#e0b0ff}
     .art-zhritsa{background:linear-gradient(160deg,#1e2a48,#0a1020);color:#b0d0ff}
@@ -81,8 +130,15 @@
     .art-solntse{background:linear-gradient(160deg,#4a3818,#1c1408);color:#ffe890}
     .art-sud{background:linear-gradient(160deg,#2c2c1c,#14140a);color:#f0e090}
     .art-mir{background:linear-gradient(160deg,#1e3840,#0a1c20);color:#b0f0d0}
-    .summary{width:100%;padding:14px 16px;background:rgba(18,10,20,.82);border:1px solid rgba(201,162,39,.22);border-radius:8px;font-size:13px;line-height:1.5;color:rgba(232,224,213,.9);text-align:center;opacity:0;transform:translateY(8px);transition:opacity .5s,transform .5s}
-    .summary.visible{opacity:1;transform:translateY(0)}
+
+    .summary{
+      width:100%;padding:14px 16px;background:rgba(18,10,20,.85);
+      border:1px solid rgba(201,162,39,.25);border-radius:8px;
+      font-size:13px;line-height:1.55;color:rgba(232,224,213,.92);text-align:center;
+      opacity:0;transform:translateY(12px) scale(.98);
+      transition:opacity .55s ease,transform .55s ease;
+    }
+    .summary.visible{opacity:1;transform:translateY(0) scale(1)}
     .summary strong{color:var(--gold);font-weight:normal}
     .actions{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:4px;width:100%}
     .btn-again{padding:12px 26px;border:1px solid rgba(201,162,39,.4);background:transparent;color:var(--gold);font-family:inherit;font-size:12px;letter-spacing:1.8px;text-transform:uppercase;border-radius:4px;cursor:pointer;min-width:200px}
@@ -98,6 +154,7 @@
   <div class="app">
     <div id="start-screen">
       <div class="title">Три карты • Прошлое • Настоящее • Будущее</div>
+      <div class="ritual" id="ritual">Очисти мысль. Колода уже слушает.</div>
       <div class="free-info" id="free-info">Сегодня бесплатных раскладов: 3</div>
       <div class="btn-draw" id="draw-btn"><span class="label">Открыть расклад</span><span class="sub">коснуться судьбы</span></div>
     </div>
@@ -116,16 +173,23 @@
       <div class="summary" id="summary"></div>
       <div class="actions">
         <button class="btn-again hidden" id="again-btn">Новый расклад</button>
-        <div class="pay-hint hidden" id="pay-hint">Бесплатные расклады на сегодня закончились.<br>Оплата Stars работает через Cloudflare Worker.</div>
+        <div class="pay-hint hidden" id="pay-hint">Бесплатные расклады на сегодня закончились.<br>Каждое открытие карты — ⭐ 5</div>
       </div>
     </div>
   </div>
   <script>
-    // Если у тебя есть Worker — вставь его URL сюда (без слэша в конце)
-    // Пример: const API_BASE = 'https://tarot-mini-app.libraryofgames.workers.dev';
-    const API_BASE = '';
-
+    const API_BASE = ''; // URL Worker для Stars, напр. 'https://xxx.workers.dev'
     const tg=window.Telegram?.WebApp;if(tg){tg.ready();tg.expand();tg.setHeaderColor('#120a08');tg.setBackgroundColor('#120a08')}
+
+    const ritualLines=[
+      'Очисти мысль. Колода уже слушает.',
+      'Сделай вдох. Знаки собираются.',
+      'Тишина перед картами — тоже ответ.',
+      'Не ищи нужное. Увидь данное.',
+      'Свеча горит. Путь открыт.'
+    ];
+    document.getElementById('ritual').textContent=ritualLines[Math.floor(Math.random()*ritualLines.length)];
+
     const deck=[
       {name:"Шут",symbol:"🃏",art:"art-shut",upright:"Новые начинания, свобода, спонтанность",reversed:"Безрассудство, наивность, хаос"},
       {name:"Маг",symbol:"✧",art:"art-mag",upright:"Сила воли, мастерство, концентрация",reversed:"Манипуляции, неуверенность"},
@@ -151,8 +215,8 @@
       {name:"Мир",symbol:"✦",art:"art-mir",upright:"Завершение, целостность, достижение",reversed:"Незавершённость, задержки"}
     ];
     const positions=["Прошлое","Настоящее","Будущее"];
-    const DAILY_FREE=3, FLIP_PRICE=5, STORAGE_DATE='tarot_day', STORAGE_FREE='tarot_free_today';
-    let currentCards=[], flippedCount=0, isFreeSpread=true;
+    const DAILY_FREE=3,FLIP_PRICE=5,STORAGE_DATE='tarot_day',STORAGE_FREE='tarot_free_today';
+    let currentCards=[],flippedCount=0,isFreeSpread=true;
 
     function todayKey(){const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
     function getFreeLeft(){const saved=localStorage.getItem(STORAGE_DATE),today=todayKey();if(saved!==today){localStorage.setItem(STORAGE_DATE,today);localStorage.setItem(STORAGE_FREE,String(DAILY_FREE));return DAILY_FREE}return Math.max(0,parseInt(localStorage.getItem(STORAGE_FREE)||DAILY_FREE,10))}
@@ -160,7 +224,7 @@
     function updateFreeInfo(){const left=getFreeLeft(),el=document.getElementById('free-info');el.textContent=left>0?'Сегодня бесплатных раскладов: '+left:'Бесплатные расклады на сегодня закончились · ⭐'+FLIP_PRICE+' за карту'}
 
     const dust=document.getElementById('dust');
-    function moveDust(x,y){const cx=(x/window.innerWidth-.5)*2,cy=(y/window.innerHeight-.5)*2;dust.style.transform='translate('+cx*12+'px,'+cy*12+'px)'}
+    function moveDust(x,y){const cx=(x/window.innerWidth-.5)*2,cy=(y/window.innerHeight-.5)*2;dust.style.transform='translate('+cx*10+'px,'+cy*10+'px)'}
     window.addEventListener('mousemove',e=>moveDust(e.clientX,e.clientY));
     window.addEventListener('deviceorientation',e=>{if(e.gamma!=null&&e.beta!=null)moveDust((e.gamma+90)/180*window.innerWidth,(e.beta+90)/180*window.innerHeight)});
 
@@ -171,31 +235,43 @@
 
     function startDrawSequence(){isFreeSpread=spendFreeSpread();updateFreeInfo();document.getElementById('start-screen').classList.add('hidden');document.getElementById('spread-screen').classList.add('active');resetSpreadUI();if(!isFreeSpread)document.getElementById('pay-hint').classList.remove('hidden');const stack=document.getElementById('deck-stack');stack.classList.add('shuffling');setTimeout(()=>{stack.classList.remove('shuffling');document.getElementById('deck-area').classList.add('hidden');dealFaceDownCards()},1400)}
 
-    function dealFaceDownCards(){currentCards=shuffle(deck).slice(0,3).map(c=>({...c,isReversed:Math.random()<.5}));flippedCount=0;const container=document.getElementById('cards-container');container.innerHTML='';container.classList.remove('hidden');document.getElementById('hint').textContent=isFreeSpread?'Коснись карты, чтобы открыть её':'Коснись карты · ⭐'+FLIP_PRICE+' за открытие';currentCards.forEach((card,i)=>{const meaning=card.isReversed?card.reversed:card.upright;const orient=card.isReversed?'перевёрнутая':'прямая';const wrap=document.createElement('div');wrap.className='card-wrap';wrap.innerHTML='<div class="card-face card-back"><div class="ornament"></div></div><div class="card-face card-front"><div class="card-position">'+positions[i]+'</div><div class="arcana-art '+card.art+'">'+card.symbol+'</div><div class="card-name">'+card.name+'</div><div class="card-orient">'+orient+'</div><div class="card-meaning">'+meaning+'</div></div>';wrap.addEventListener('click',()=>onCardTap(wrap));container.appendChild(wrap);setTimeout(()=>wrap.classList.add('dealt'),30)})}
-
-    function flipCard(wrap){if(wrap.classList.contains('flipped'))return;wrap.classList.add('flipped');flippedCount++;if(tg?.HapticFeedback)tg.HapticFeedback.impactOccurred('light');if(flippedCount>=3){document.getElementById('hint').textContent='';setTimeout(()=>{const s=document.getElementById('summary');s.innerHTML=makeSummary(currentCards);s.classList.add('visible');document.getElementById('again-btn').classList.remove('hidden')},450)}else{document.getElementById('hint').textContent=isFreeSpread?'Открыто '+flippedCount+' из 3 — коснись следующей':'Открыто '+flippedCount+' из 3 · ⭐'+FLIP_PRICE+' за следующую'}}
-
-    async function onCardTap(wrap){if(wrap.classList.contains('flipped'))return;if(isFreeSpread){flipCard(wrap);return}await payForFlip(wrap)}
-
-    async function payForFlip(wrap){
-      if(!tg){alert('Открой приложение внутри Telegram');return}
-      if(!API_BASE){
-        // На GitHub Pages нет своего API — если Worker не указан, открываем карту бесплатно (демо)
-        // Чтобы включить оплату: укажи API_BASE = URL твоего Worker
-        flipCard(wrap);
-        return;
-      }
-      try{
-        const userId=tg.initDataUnsafe?.user?.id||'unknown';
-        const r=await fetch(API_BASE+'/api/create-invoice',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId,amount:FLIP_PRICE})});
-        const data=await r.json();
-        if(!data.invoiceUrl){alert('Не удалось создать счёт');return}
-        tg.openInvoice(data.invoiceUrl,status=>{if(status==='paid'){flipCard(wrap);if(tg.HapticFeedback)tg.HapticFeedback.notificationOccurred('success')}})
-      }catch(e){console.error(e);alert('Ошибка оплаты')}
+    function dealFaceDownCards(){
+      currentCards=shuffle(deck).slice(0,3).map(c=>({...c,isReversed:Math.random()<.5}));
+      flippedCount=0;
+      const container=document.getElementById('cards-container');
+      container.innerHTML='';container.classList.remove('hidden');
+      document.getElementById('hint').textContent=isFreeSpread?'Коснись карты, чтобы открыть её':'Коснись карты · ⭐'+FLIP_PRICE+' за открытие';
+      currentCards.forEach((card,i)=>{
+        const meaning=card.isReversed?card.reversed:card.upright;
+        const orient=card.isReversed?'перевёрнутая':'прямая';
+        const wrap=document.createElement('div');
+        wrap.className='card-wrap'+(card.isReversed?' is-reversed':'');
+        wrap.innerHTML=
+          '<div class="card-face card-back">'+
+            '<div class="dots tl"></div><div class="dots tr"></div><div class="dots bl"></div><div class="dots br"></div>'+
+            '<div class="frame"><div class="sigil">✦</div></div>'+
+          '</div>'+
+          '<div class="card-face card-front">'+
+            '<div class="inner-frame"></div>'+
+            '<div class="card-position">'+positions[i]+'</div>'+
+            '<div class="arcana-art '+card.art+'">'+card.symbol+'</div>'+
+            '<div class="card-name">'+card.name+'</div>'+
+            '<div class="card-orient'+(card.isReversed?' rev':'')+'">'+orient+'</div>'+
+            '<div class="card-meaning">'+meaning+'</div>'+
+          '</div>';
+        wrap.addEventListener('click',()=>onCardTap(wrap));
+        container.appendChild(wrap);
+        setTimeout(()=>wrap.classList.add('dealt'),30);
+      });
     }
 
+    function flipCard(wrap){if(wrap.classList.contains('flipped'))return;wrap.classList.add('flipped');flippedCount++;if(tg?.HapticFeedback)tg.HapticFeedback.impactOccurred('light');if(flippedCount>=3){document.getElementById('hint').textContent='';setTimeout(()=>{const s=document.getElementById('summary');s.innerHTML=makeSummary(currentCards);s.classList.add('visible');document.getElementById('again-btn').classList.remove('hidden')},480)}else{document.getElementById('hint').textContent=isFreeSpread?'Открыто '+flippedCount+' из 3 — коснись следующей':'Открыто '+flippedCount+' из 3 · ⭐'+FLIP_PRICE+' за следующую'}}
+
+    async function onCardTap(wrap){if(wrap.classList.contains('flipped'))return;if(isFreeSpread){flipCard(wrap);return}await payForFlip(wrap)}
+    async function payForFlip(wrap){if(!tg){alert('Открой приложение внутри Telegram');return}if(!API_BASE){flipCard(wrap);return}try{const userId=tg.initDataUnsafe?.user?.id||'unknown';const r=await fetch(API_BASE+'/api/create-invoice',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId,amount:FLIP_PRICE})});const data=await r.json();if(!data.invoiceUrl){alert('Не удалось создать счёт');return}tg.openInvoice(data.invoiceUrl,status=>{if(status==='paid'){flipCard(wrap);if(tg.HapticFeedback)tg.HapticFeedback.notificationOccurred('success')}})}catch(e){console.error(e);alert('Ошибка оплаты')}}
+
     document.getElementById('draw-btn').addEventListener('click',startDrawSequence);
-    document.getElementById('again-btn').addEventListener('click',()=>{document.getElementById('spread-screen').classList.remove('active');document.getElementById('start-screen').classList.remove('hidden');updateFreeInfo();setTimeout(startDrawSequence,250)});
+    document.getElementById('again-btn').addEventListener('click',()=>{document.getElementById('spread-screen').classList.remove('active');document.getElementById('start-screen').classList.remove('hidden');document.getElementById('ritual').textContent=ritualLines[Math.floor(Math.random()*ritualLines.length)];updateFreeInfo();setTimeout(startDrawSequence,250)});
     updateFreeInfo();
   </script>
 </body>
