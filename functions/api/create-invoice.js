@@ -12,21 +12,23 @@ export async function onRequestPost(context) {
 
   try {
     let userId = 'anon';
+    let amount = 5; // цена за один переворот карты
     try {
       const body = await request.json();
       userId = body.userId || 'anon';
+      if (body.amount && Number(body.amount) > 0) amount = Number(body.amount);
     } catch (e) {}
 
     const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/createInvoiceLink`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        title: 'Дополнительный расклад',
-        description: 'Один магический расклад Таро',
-        payload: `tarot_${userId}_${Date.now()}`,
+        title: 'Открытие карты',
+        description: 'Переворот одной карты Таро',
+        payload: `tarot_flip_${userId}_${Date.now()}`,
         provider_token: '',
         currency: 'XTR',
-        prices: [{ label: 'Расклад Таро', amount: 15 }]
+        prices: [{ label: 'Открытие карты', amount: amount }]
       })
     });
 
